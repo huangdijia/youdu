@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * This file is part of youdu-client.
  *
@@ -20,5 +18,11 @@ interface GroupInterface
 
     public function info(int $groupId): array;
 
-    public function list(?int $userId = null): array;
+    public function list(?string $userId = null): array;
+
+    public function addMember(int $groupId, array $userList): bool;
+
+    public function deleteMember(int $groupId, array $userList): bool;
+
+    public function isMember(int $groupId, string $userId): bool;
 }

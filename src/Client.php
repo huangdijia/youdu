@@ -19,4 +19,9 @@ class Client
     {
         $this->client = $client;
     }
+
+    public function getToken(): array
+    {
+        return [];
+    }
 }

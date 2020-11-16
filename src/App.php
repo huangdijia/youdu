@@ -9,17 +9,15 @@
  */
 namespace Huangdijia\Youdu;
 
-use GuzzleHttp\ClientInterface;
-
 class App
 {
     protected $client;
 
     public function __construct(string $api = '', int $buin, string $appId = '', string $aesKey = '')
     {
-        $this->api    = $api;
-        $this->buin   = $buin;
-        $this->appId  = $appId;
+        $this->api = $api;
+        $this->buin = $buin;
+        $this->appId = $appId;
         $this->aesKey = $aesKey;
     }
 

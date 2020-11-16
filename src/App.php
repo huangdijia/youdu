@@ -11,13 +11,16 @@ namespace Huangdijia\Youdu;
 
 use GuzzleHttp\ClientInterface;
 
-class Client
+class App
 {
     protected $client;
 
-    public function __construct(ClientInterface $client)
+    public function __construct(string $api = '', int $buin, string $appId = '', string $aesKey = '')
     {
-        $this->client = $client;
+        $this->api    = $api;
+        $this->buin   = $buin;
+        $this->appId  = $appId;
+        $this->aesKey = $aesKey;
     }
 
     public function getToken(): array

@@ -11,7 +11,7 @@ namespace Huangdijia\Youdu;
 
 use Huangdijia\Youdu\Contracts\MediaInterface;
 
-class Media extends Client implements MediaInterface
+class Media extends App implements MediaInterface
 {
     public function upload($file): string
     {

@@ -9,6 +9,6 @@
  */
 namespace Huangdijia\Youdu;
 
-class Dept extends Client
+class Dept extends App
 {
 }

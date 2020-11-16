@@ -9,6 +9,6 @@
  */
 namespace Huangdijia\Youdu;
 
-class Session extends Client
+class Session extends App
 {
 }

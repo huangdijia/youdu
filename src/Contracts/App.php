@@ -7,3 +7,11 @@
  * @contact  huangdijia@gmail.com
  * @link     https://youdu.im/api/api.html#40011
  */
+namespace Huangdijia\Youdu\Contracts;
+
+use Huangdijia\Youdu\Contracts\Messages\AppMessage;
+
+interface App
+{
+    public function send(AppMessage $message): bool;
+}

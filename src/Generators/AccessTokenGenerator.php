@@ -12,7 +12,7 @@ namespace Huangdijia\Youdu\Generators;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Huangdijia\Youdu\Config;
-use Huangdijia\Youdu\Http\Response;
+use Huangdijia\Youdu\Constants\ErrCodes\GlobalErrCode;
 use Huangdijia\Youdu\Packer\MessagePacker;
 use RuntimeException;
 
@@ -47,17 +47,15 @@ class AccessTokenGenerator
      */
     public function get()
     {
-        $encrypted = $this->packer->pack((string) time());
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $encrypted,
+            'encrypt' => $this->packer->pack((string) time()),
         ];
 
-        $url = '/cgi/gettoken';
-        $response = new Response($this->client->post($url, ['form_params' => $parameters]));
+        $response = $this->client->post('/cgi/gettoken', $parameters);
 
-        if ($response['errcode'] != 0) {
+        if ($response['errcode'] != GlobalErrCode::OK) {
             throw new RuntimeException($response['errmsg'], $response['errcode']);
         }
 

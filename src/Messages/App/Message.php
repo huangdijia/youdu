@@ -9,10 +9,10 @@
  */
 namespace Huangdijia\Youdu\Messages\App;
 
-use Huangdijia\Youdu\Contracts\Arrayable;
-use Huangdijia\Youdu\Contracts\Jsonable;
 use Huangdijia\Youdu\Contracts\Messages\AppMessage;
-use Huangdijia\Youdu\Contracts\Whenable;
+use Huangdijia\Youdu\Contracts\Support\Arrayable;
+use Huangdijia\Youdu\Contracts\Support\Jsonable;
+use Huangdijia\Youdu\Contracts\Support\Whenable;
 use JsonSerializable;
 
 abstract class Message implements AppMessage, Arrayable, Jsonable, JsonSerializable, Whenable

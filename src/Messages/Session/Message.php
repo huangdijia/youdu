@@ -9,10 +9,10 @@
  */
 namespace Huangdijia\Youdu\Messages\Session;
 
-use Huangdijia\Youdu\Contracts\Arrayable;
-use Huangdijia\Youdu\Contracts\Jsonable;
 use Huangdijia\Youdu\Contracts\Messages\SessionMessage;
-use Huangdijia\Youdu\Contracts\Whenable;
+use Huangdijia\Youdu\Contracts\Support\Arrayable;
+use Huangdijia\Youdu\Contracts\Support\Jsonable;
+use Huangdijia\Youdu\Contracts\Support\Whenable;
 use JsonSerializable;
 
 abstract class Message implements SessionMessage, Arrayable, Jsonable, JsonSerializable, Whenable

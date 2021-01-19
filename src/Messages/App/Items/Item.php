@@ -9,9 +9,9 @@
  */
 namespace Huangdijia\Youdu\Messages\App\Items;
 
-use Huangdijia\Youdu\Contracts\Arrayable;
-use Huangdijia\Youdu\Contracts\Jsonable;
 use Huangdijia\Youdu\Contracts\Messages\AppMessageItem;
+use Huangdijia\Youdu\Contracts\Support\Arrayable;
+use Huangdijia\Youdu\Contracts\Support\Jsonable;
 
 class Item implements AppMessageItem, Arrayable, Jsonable
 {

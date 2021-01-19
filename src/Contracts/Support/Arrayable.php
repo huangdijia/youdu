@@ -7,7 +7,7 @@
  * @contact  huangdijia@gmail.com
  * @link     https://youdu.im/api/api.html#40011
  */
-namespace Huangdijia\Youdu\Contracts;
+namespace Huangdijia\Youdu\Contracts\Support;
 
 interface Arrayable
 {

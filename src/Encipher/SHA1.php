@@ -9,7 +9,7 @@
  */
 namespace Huangdijia\Youdu\Encipher;
 
-use Huangdijia\Youdu\Exceptions\ErrCode;
+use Huangdijia\Youdu\Constants\ErrCodes\GlobalErrCode;
 use Throwable;
 
 class SHA1
@@ -28,11 +28,11 @@ class SHA1
         try {
             $array = [$encrypt_msg, $token, $timestamp, $nonce];
             sort($array, SORT_STRING);
-            $str = implode($array);
+            $str = implode('', $array);
 
-            return [ErrCode::$OK, sha1($str)];
+            return [GlobalErrCode::OK, sha1($str)];
         } catch (Throwable $e) {
-            return [ErrCode::$ComputeSignatureError, $e->getMessage()];
+            return [GlobalErrCode::COMPUTE_SIGNATURE_ERROR, $e->getMessage()];
         }
     }
 }

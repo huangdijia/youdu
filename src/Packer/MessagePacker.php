@@ -9,6 +9,7 @@
  */
 namespace Huangdijia\Youdu\Packer;
 
+use Huangdijia\Youdu\Config;
 use Huangdijia\Youdu\Constants\ErrCodes\GlobalErrCode;
 use Huangdijia\Youdu\Encipher\Prpcrypt;
 use RuntimeException;
@@ -20,9 +21,15 @@ class MessagePacker
      */
     protected $crypter;
 
-    public function __construct(Prpcrypt $crypter)
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    public function __construct(Config $config)
     {
-        $this->crypter = $crypter;
+        $this->config = $config;
+        $this->crypter = $config->getCrypter();
     }
 
     /**
@@ -31,7 +38,7 @@ class MessagePacker
      */
     public function pack(string $message)
     {
-        [$errcode, $encrypted] = $this->crypter->encrypt($message, $this->appId);
+        [$errcode, $encrypted] = $this->crypter->encrypt($message, $this->config->getAppId());
 
         if ($errcode != GlobalErrCode::OK) {
             throw new RuntimeException($encrypted, $errcode);
@@ -46,11 +53,11 @@ class MessagePacker
      */
     public function unpack(string $message)
     {
-        if (strlen($this->aesKey) != 44) {
+        if (strlen($this->config->getAesKey()) != 44) {
             throw new RuntimeException('Illegal aesKey', GlobalErrCode::ILLEGAL_AES_KEY);
         }
 
-        [$errcode, $decrypted] = $this->crypter->decrypt($message, $this->appId);
+        [$errcode, $decrypted] = $this->crypter->decrypt($message, $this->config->getAppId());
 
         if ($errcode != GlobalErrCode::OK) {
             throw new RuntimeException('Decrypt faild:' . $decrypted, $errcode);

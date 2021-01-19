@@ -9,10 +9,9 @@
  */
 namespace Huangdijia\Youdu;
 
-use GuzzleHttp\Client;
 use Huangdijia\Youdu\Constants\ErrCodes\GlobalErrCode;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
-use Huangdijia\Youdu\Http\Response;
+use Huangdijia\Youdu\Http\PendingRequest;
 use Huangdijia\Youdu\Packer\MessagePacker;
 use RuntimeException;
 use Throwable;
@@ -25,7 +24,7 @@ class User
     protected $config;
 
     /**
-     * @var Client
+     * @var PendingRequest
      */
     protected $client;
 
@@ -53,7 +52,7 @@ class User
      */
     public function simpleList(?int $deptId = 0)
     {
-        $response = Response::make($this->client->get($this->app->url('/cgi/user/simplelist'), ['query' => ['deptId' => $deptId]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/user/simplelist'), ['deptId' => $deptId]);
 
         if ($response['errcode'] !== GlobalErrCode::OK) {
             throw new RuntimeException($response['errmsg']);
@@ -70,7 +69,7 @@ class User
      */
     public function lists(?int $deptId = 0)
     {
-        $response = Response::make($this->client->get($this->app->url('/cgi/user/list'), ['query' => ['deptId' => $deptId]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/user/list'), ['deptId' => $deptId]);
 
         if ($response['errcode'] !== GlobalErrCode::OK) {
             throw new RuntimeException($response['errmsg'], 1);
@@ -94,19 +93,21 @@ class User
      */
     public function create($userId, string $name, int $gender = 0, string $mobile = '', string $phone = '', string $email = '', array $dept = [])
     {
-        $parameters = $this->packer->pack(json_encode([
+        $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'userId' => $userId,
-            'name' => $name,
-            'gender' => $gender,
-            'mobile' => $mobile,
-            'phone' => $phone,
-            'email' => $email,
-            'dept' => $dept,
-        ]));
+            'encrypt' => $this->packer->pack(json_encode([
+                'userId' => $userId,
+                'name' => $name,
+                'gender' => $gender,
+                'mobile' => $mobile,
+                'phone' => $phone,
+                'email' => $email,
+                'dept' => $dept,
+            ])),
+        ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/user/create'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/user/create'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -132,19 +133,21 @@ class User
      */
     public function update($userId, string $name, int $gender = 0, string $mobile = '', string $phone = '', string $email = '', array $dept = [])
     {
-        $parameters = $this->packer->unpack(json_encode([
+        $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'userId' => $userId,
-            'name' => $name,
-            'gender' => $gender,
-            'mobile' => $mobile,
-            'phone' => $phone,
-            'email' => $email,
-            'dept' => $dept,
-        ]));
+            'encrypt' => $this->packer->pack(json_encode([
+                'userId' => $userId,
+                'name' => $name,
+                'gender' => $gender,
+                'mobile' => $mobile,
+                'phone' => $phone,
+                'email' => $email,
+                'dept' => $dept,
+            ])),
+        ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/user/update'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/user/update'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -168,17 +171,19 @@ class User
      */
     public function updatePosition($userId, int $deptId, string $position = '', int $weight = 0, int $sortId = 0)
     {
-        $parameters = $this->packer->pack(json_encode([
+        $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'userId' => $userId,
-            'deptId' => $deptId,
-            'position' => $position,
-            'weight' => $weight,
-            'sortId' => $sortId,
-        ]));
+            'encrypt' => $this->packer->pack(json_encode([
+                'userId' => $userId,
+                'deptId' => $deptId,
+                'position' => $position,
+                'weight' => $weight,
+                'sortId' => $sortId,
+            ])),
+        ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/user/positionupdate'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/user/positionupdate'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -201,13 +206,15 @@ class User
     {
         // batch delete
         if (is_array($userId)) {
-            $parameters = $this->packer->pack(json_encode([
+            $parameters = [
                 'buin' => $this->config->getBuin(),
                 'appId' => $this->config->getAppId(),
-                'delList' => $userId,
-            ]));
+                'encrypt' => $this->packer->pack(json_encode([
+                    'delList' => $userId,
+                ])),
+            ];
 
-            $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/user/batchdelete'), ['form_params' => $parameters]));
+            $response = $this->client->post($this->urlFormatter->format('/cgi/user/batchdelete'), $parameters);
 
             if (! $response->ok()) {
                 throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -221,7 +228,7 @@ class User
         }
 
         // single delete
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/user/delete'), ['query' => ['userId' => $userId]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/user/delete'), ['userId' => $userId]);
 
         if ($response['errcode'] !== GlobalErrCode::OK) {
             throw new RuntimeException($response['errmsg']);
@@ -237,7 +244,7 @@ class User
      */
     public function get($userId)
     {
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/user/get'), ['query' => ['userId' => $userId]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/user/get'), ['userId' => $userId]);
 
         if ($response['errcode'] !== GlobalErrCode::OK) {
             throw new RuntimeException($response['errmsg']);
@@ -261,15 +268,17 @@ class User
         // md5 -> hex -> lower
         $passwd = strtolower(bin2hex(md5($passwd)));
 
-        $parameters = $this->packer->pack(json_encode([
+        $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'userId' => $userId,
-            'authType' => $authType,
-            'passwd' => $passwd,
-        ]));
+            'encrypt' => $this->packer->pack(json_encode([
+                'userId' => $userId,
+                'authType' => $authType,
+                'passwd' => $passwd,
+            ])),
+        ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/user/setauth'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/user/setauth'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response['httpCode'], GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -320,13 +329,13 @@ class User
             ['name' => 'userId', 'contents' => $userId],
             ['name' => 'file', 'contents' => fopen(realpath($tmpFile), 'r')],
             ['name' => 'encrypt', 'contents' => $encryptedMsg],
-            ['name' => 'buin', 'contents' => $this->app->getBuin()],
-            ['name' => 'appId', 'contents' => $this->app->getAppId()],
+            ['name' => 'buin', 'contents' => $this->config->getBuin()],
+            ['name' => 'appId', 'contents' => $this->config->getAppId()],
         ];
 
         try {
             // 开始上传
-            $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/avatar/set'), ['multipart' => $parameters]));
+            $response = $this->client->post($this->urlFormatter->format('/cgi/avatar/set'), $parameters, 'multipart');
 
             if ($response['errcode'] !== GlobalErrCode::OK) {
                 throw new RuntimeException($response['errmsg'], $response['errcode']);
@@ -348,7 +357,7 @@ class User
      */
     public function getAvatar($userId, int $size = 0)
     {
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/avatar/get'), ['query' => ['userId' => $userId, 'size' => $size]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/avatar/get'), ['userId' => $userId, 'size' => $size]);
 
         return $this->packer->unpack($response->body() ?? '');
     }
@@ -360,7 +369,7 @@ class User
      */
     public function identify(string $token)
     {
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/identify?token=' . $token, false)));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/identify', false), ['token' => $token]);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);

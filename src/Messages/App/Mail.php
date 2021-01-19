@@ -1,18 +1,30 @@
 <?php
-
+/**
+ * This file is part of youdu-client.
+ *
+ * @link     https://github.com/huangdijia/youdu-client
+ * @document https://github.com/huangdijia/youdu-client
+ * @contact  huangdijia@gmail.com
+ * @link     https://youdu.im/api/api.html#40011
+ */
 namespace Huangdijia\Youdu\Messages\App;
 
 class Mail extends Message
 {
     protected $action;
+
     protected $subject;
+
     protected $fromUser;
+
     protected $fromEmail;
+
     protected $link;
+
     protected $unreadCount;
 
     /**
-     * 图片消息
+     * 图片消息.
      *
      * @param string $action 邮件消息类型。new: 新邮件，unread: 未读邮件数
      * @param string $subject 邮件主题。action为new时有效，可为空
@@ -24,32 +36,32 @@ class Mail extends Message
      */
     public function __construct(string $action = '', string $subject = '', string $fromUser = '', string $fromEmail = '', string $link, int $unreadCount = 0)
     {
-        $this->action      = $action;
-        $this->subject     = $subject;
-        $this->fromUser    = $fromUser;
-        $this->fromEmail   = $fromEmail;
-        $this->link        = $link;
+        $this->action = $action;
+        $this->subject = $subject;
+        $this->fromUser = $fromUser;
+        $this->fromEmail = $fromEmail;
+        $this->link = $link;
         $this->unreadCount = $unreadCount;
     }
 
     /**
-     * 转成 array
-     * @return array 
+     * 转成 array.
+     * @return array
      */
     public function toArray()
     {
         return [
-            "toUser"  => $this->toUser,
-            "toDept"  => $this->toDept,
-            "msgType" => "mail",
-            "mail"    => [
-                "action"      => $this->action,
-                "subject"     => $this->subject,
-                "fromUser"    => $this->fromUser,
-                "fromEmail"   => $this->fromEmail,
-                "time"        => time(),
-                "link"        => $this->link,
-                "unreadCount" => $this->unreadCount,
+            'toUser' => $this->toUser,
+            'toDept' => $this->toDept,
+            'msgType' => 'mail',
+            'mail' => [
+                'action' => $this->action,
+                'subject' => $this->subject,
+                'fromUser' => $this->fromUser,
+                'fromEmail' => $this->fromEmail,
+                'time' => time(),
+                'link' => $this->link,
+                'unreadCount' => $this->unreadCount,
             ],
         ];
     }

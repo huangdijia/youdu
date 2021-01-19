@@ -13,6 +13,7 @@ use GuzzleHttp\Client;
 use Huangdijia\Youdu\Encipher\Prpcrypt;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
 use Huangdijia\Youdu\Generators\AccessTokenGenerator;
+use Huangdijia\Youdu\Http\PendingRequest;
 use Huangdijia\Youdu\Packer\MessagePacker;
 
 class Config
@@ -28,7 +29,7 @@ class Config
     private $config;
 
     /**
-     * @var Client
+     * @var PendingRequest
      */
     private $client;
 
@@ -134,15 +135,17 @@ class Config
     }
 
     /**
-     * @return Client
+     * @return PendingRequest
      */
     public function getClient()
     {
         if (is_null($this->client)) {
-            $this->client = new Client([
-                'base_uri' => $this->getApi(),
-                'timeout' => 5.0,
-            ]);
+            $this->client = new PendingRequest(function () {
+                return new Client([
+                    'base_uri' => $this->getApi(),
+                    'timeout' => 5.0,
+                ]);
+            });
         }
 
         return $this->client;

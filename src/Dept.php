@@ -9,11 +9,10 @@
  */
 namespace Huangdijia\Youdu;
 
-use GuzzleHttp\Client;
 use Huangdijia\Youdu\Constants\BaseErrCode;
 use Huangdijia\Youdu\Constants\ErrCodes\DeptErrCode;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
-use Huangdijia\Youdu\Http\Response;
+use Huangdijia\Youdu\Http\PendingRequest;
 use Huangdijia\Youdu\Packer\MessagePacker;
 use RuntimeException;
 
@@ -25,7 +24,7 @@ class Dept
     protected $config;
 
     /**
-     * @var Client
+     * @var PendingRequest
      */
     protected $client;
 
@@ -53,7 +52,7 @@ class Dept
      */
     public function lists(int $parentDeptId = 0)
     {
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/dept/list'), ['query' => ['id' => $parentDeptId]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/dept/list'), ['id' => $parentDeptId]);
 
         if ($response['errcode'] !== DeptErrCode::OK) {
             throw new RuntimeException($response['errmsg'], 1);
@@ -87,7 +86,7 @@ class Dept
             ])),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/dept/create'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/dept/create'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response['httpCode'], BaseErrCode::INVALID_REQUEST);
@@ -126,7 +125,7 @@ class Dept
             ])),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/dept/update'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/dept/update'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::INVALID_REQUEST);
@@ -146,7 +145,7 @@ class Dept
      */
     public function delete(int $deptId)
     {
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/dept/delete'), ['query' => ['id' => $deptId]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/dept/delete'), ['id' => $deptId]);
 
         if ($response['errcode'] !== DeptErrCode::OK) {
             throw new RuntimeException($response['errmsg']);
@@ -162,7 +161,7 @@ class Dept
      */
     public function getId(string $alias = '')
     {
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/dept/list'), ['query' => ['alias' => $alias]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/dept/list'), ['alias' => $alias]);
 
         if ($response['errcode'] !== DeptErrCode::OK) {
             throw new RuntimeException($response['errmsg'], 1);

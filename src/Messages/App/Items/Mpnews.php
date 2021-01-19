@@ -1,12 +1,16 @@
 <?php
-
+/**
+ * This file is part of youdu-client.
+ *
+ * @link     https://github.com/huangdijia/youdu-client
+ * @document https://github.com/huangdijia/youdu-client
+ * @contact  huangdijia@gmail.com
+ * @link     https://youdu.im/api/api.html#40011
+ */
 namespace Huangdijia\Youdu\Messages\App\Items;
 
 class Mpnews extends Item
 {
-    /**
-     * @param array $items
-     */
     public function __construct(array $items = [])
     {
         $this->items = $items;
@@ -22,11 +26,11 @@ class Mpnews extends Item
     public function add(string $title = '', string $mediaId = '', string $content = '', string $digest = '', int $showFont = 1)
     {
         $this->items[] = [
-            "title"     => $title,
-            "media_id"  => $mediaId,
-            "content"   => $content,
-            "digest"    => $digest,
-            "showFront" => $showFont,
+            'title' => $title,
+            'media_id' => $mediaId,
+            'content' => $content,
+            'digest' => $digest,
+            'showFront' => $showFont,
         ];
     }
 }

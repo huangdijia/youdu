@@ -9,10 +9,9 @@
  */
 namespace Huangdijia\Youdu;
 
-use GuzzleHttp\Client;
 use Huangdijia\Youdu\Constants\ErrCodes\GlobalErrCode;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
-use Huangdijia\Youdu\Http\Response;
+use Huangdijia\Youdu\Http\PendingRequest;
 use Huangdijia\Youdu\Packer\MessagePacker;
 use RuntimeException;
 use Throwable;
@@ -25,7 +24,7 @@ class Media
     protected $config;
 
     /**
-     * @var Client
+     * @var PendingRequest
      */
     protected $client;
 
@@ -89,13 +88,13 @@ class Media
         $parameters = [
             ['name' => 'file', 'contents' => fopen($tmpFile, 'r')],
             ['name' => 'encrypt', 'contents' => $encryptedMsg],
-            ['name' => 'buin', 'contents' => $this->app->getBuin()],
-            ['name' => 'appId', 'contents' => $this->app->getAppId()],
+            ['name' => 'buin', 'contents' => $this->config->getBuin()],
+            ['name' => 'appId', 'contents' => $this->config->getAppId()],
         ];
 
         try {
             // 开始上传
-            $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/media/upload'), ['multipart' => $parameters]));
+            $response = $this->client->post($this->urlFormatter->format('/cgi/media/upload'), $parameters, 'multipart');
 
             // 出错后删除加密文件
             if ($response['errcode'] !== GlobalErrCode::OK) {
@@ -131,8 +130,7 @@ class Media
             'encrypt' => $encrypted,
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/media/get'), ['form_params' => $parameters]));
-
+        $response = $this->client->post($this->urlFormatter->format('/cgi/media/get'), $parameters);
         $fileInfo = $this->packer->unpack($response->header('Encrypt'));
         $fileInfo = json_decode($fileInfo, true);
 
@@ -169,7 +167,7 @@ class Media
             'encrypt' => $encrypted,
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/media/search'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/media/search'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);

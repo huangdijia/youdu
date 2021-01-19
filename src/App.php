@@ -9,11 +9,10 @@
  */
 namespace Huangdijia\Youdu;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Huangdijia\Youdu\Constants\BaseErrCode;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
-use Huangdijia\Youdu\Http\Response;
+use Huangdijia\Youdu\Http\PendingRequest;
 use Huangdijia\Youdu\Messages\App\Message;
 use Huangdijia\Youdu\Messages\App\PopWindow;
 use Huangdijia\Youdu\Messages\App\SysMsg;
@@ -30,7 +29,7 @@ class App
     protected $config;
 
     /**
-     * @var Client
+     * @var PendingRequest
      */
     protected $client;
 
@@ -68,7 +67,7 @@ class App
         ];
 
         $url = $this->urlFormatter->format('/cgi/msg/send');
-        $response = Response::make($this->client->post($url, ['form_params' => $parameters]));
+        $response = $this->client->post($url, $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::INVALID_REQUEST);
@@ -151,7 +150,7 @@ class App
     public function setNoticeCount(string $account = '', string $tip = '', int $msgCount = 0)
     {
         $parameters = [
-            'app_id' => $this->appId,
+            'app_id' => $this->config->getAppId(),
             'msg_encrypt' => $this->packer->pack(json_encode([
                 'account' => $account,
                 'tip' => $tip,
@@ -159,7 +158,7 @@ class App
             ])),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/set.ent.notice'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/set.ent.notice'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::INVALID_REQUEST);
@@ -189,11 +188,11 @@ class App
         });
 
         $parameters = [
-            'app_id' => $this->appId,
+            'app_id' => $this->config->getAppId(),
             'msg_encrypt' => $this->packer->pack($message->toJson()),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/popwindow'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/popwindow'), ['form_params' => $parameters]);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::INVALID_REQUEST);

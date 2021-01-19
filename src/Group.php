@@ -9,11 +9,10 @@
  */
 namespace Huangdijia\Youdu;
 
-use GuzzleHttp\Client;
 use Huangdijia\Youdu\Constants\ErrCodes\GlobalErrCode;
 use Huangdijia\Youdu\Constants\ErrCodes\GroupErrCode;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
-use Huangdijia\Youdu\Http\Response;
+use Huangdijia\Youdu\Http\PendingRequest;
 use Huangdijia\Youdu\Packer\MessagePacker;
 use RuntimeException;
 
@@ -25,7 +24,7 @@ class Group
     protected $config;
 
     /**
-     * @var Client
+     * @var PendingRequest
      */
     protected $client;
 
@@ -61,7 +60,7 @@ class Group
             $parameters['userId'] = $userId;
         }
 
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/group/list'), ['query' => $parameters]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/group/list'), $parameters);
 
         if ($response['errcode'] !== GroupErrCode::OK) {
             throw new RuntimeException($response['errmsg']);
@@ -87,7 +86,7 @@ class Group
             ])),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/group/create'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/group/create'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -135,7 +134,7 @@ class Group
             ])),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/group/update'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/group/update'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response['httpCode'], GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -155,7 +154,7 @@ class Group
      */
     public function info(string $groupId)
     {
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/group/info'), ['query' => ['id' => $groupId]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/group/info'), ['id' => $groupId]);
 
         if ($response['errcode'] !== GroupErrCode::OK) {
             throw new RuntimeException($response['errmsg']);
@@ -182,7 +181,7 @@ class Group
             ])),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/group/addmember'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/group/addmember'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response['httpCode'], GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -209,7 +208,7 @@ class Group
             ])),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/group/delmember'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/group/delmember'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -230,7 +229,7 @@ class Group
      */
     public function isMember(string $groupId, $userId)
     {
-        $response = Response::make($this->client->get($this->urlFormatter->format('/cgi/group/ismember'), ['query' => ['id' => $groupId, 'userId' => $userId]]));
+        $response = $this->client->get($this->urlFormatter->format('/cgi/group/ismember'), ['id' => $groupId, 'userId' => $userId]);
 
         if ($response['errcode'] !== GroupErrCode::OK) {
             throw new RuntimeException($response['errmsg'], 1);

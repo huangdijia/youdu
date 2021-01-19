@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * This file is part of youdu-client.
+ *
+ * @link     https://github.com/huangdijia/youdu-client
+ * @document https://github.com/huangdijia/youdu-client
+ * @contact  huangdijia@gmail.com
+ * @link     https://youdu.im/api/api.html#40011
+ */
 namespace Huangdijia\Youdu\Messages\Session;
 
 class Video extends Message
@@ -7,9 +14,9 @@ class Video extends Message
     protected $mediaId;
 
     /**
-     *  视频消息
+     *  视频消息.
      *
-     * @param string $mediaId  视频素材文件id。通过上传素材文件接口获取
+     * @param string $mediaId 视频素材文件id。通过上传素材文件接口获取
      */
     public function __construct(string $mediaId = '')
     {
@@ -19,12 +26,12 @@ class Video extends Message
     public function toArray()
     {
         return [
-            "sessionId" => $this->sessionId,
-            "receiver"  => $this->receiver,
-            "sender"    => $this->sender,
-            "msgType"   => "video",
-            "video"     => [
-                "media_id" => $this->mediaId,
+            'sessionId' => $this->sessionId,
+            'receiver' => $this->receiver,
+            'sender' => $this->sender,
+            'msgType' => 'video',
+            'video' => [
+                'media_id' => $this->mediaId,
             ],
         ];
     }

@@ -9,10 +9,9 @@
  */
 namespace Huangdijia\Youdu;
 
-use GuzzleHttp\Client;
 use Huangdijia\Youdu\Constants\ErrCodes\GlobalErrCode;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
-use Huangdijia\Youdu\Http\Response;
+use Huangdijia\Youdu\Http\PendingRequest;
 use Huangdijia\Youdu\Messages\Session\Message;
 use Huangdijia\Youdu\Messages\Session\Text;
 use Huangdijia\Youdu\Packer\MessagePacker;
@@ -27,7 +26,7 @@ class Session
     protected $config;
 
     /**
-     * @var Client
+     * @var PendingRequest
      */
     protected $client;
 
@@ -79,7 +78,7 @@ class Session
             return (string) $item;
         }, $member);
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/session/create'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/session/create'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -125,7 +124,7 @@ class Session
             ])),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/session/update'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/session/update'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);
@@ -146,7 +145,7 @@ class Session
      */
     public function info(string $sessionId)
     {
-        $response = $this->client->get($this->urlFormatter->format('/cgi/session/get'), ['query' => ['sessionId' => $sessionId]]);
+        $response = $this->client->get($this->urlFormatter->format('/cgi/session/get'), ['sessionId' => $sessionId]);
 
         if ($response['errcode'] !== GlobalErrCode::OK) {
             throw new RuntimeException($response['errmsg'], 1);
@@ -172,7 +171,7 @@ class Session
             'encrypt' => $this->packer->pack($message->toJson()),
         ];
 
-        $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/session/send'), ['form_params' => $parameters]));
+        $response = $this->client->post($this->urlFormatter->format('/cgi/session/send'), $parameters);
 
         if (! $response->ok()) {
             throw new RuntimeException('http request code ' . $response->status(), GlobalErrCode::ILLEGAL_HTTP_REQ);

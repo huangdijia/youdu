@@ -87,11 +87,11 @@ class Prpcrypt
             $jsonContent = substr($content, 4, $jsonLen);
             $fromAppId = substr($content, $jsonLen + 4);
         } catch (Throwable $e) {
-            return [GlobalErrCode::ILLEGAL_BUFFER, 'Illegal Buffer'];
-        }
+            if ($fromAppId != 'sysOrgAssistant' && $fromAppId != $appId) {
+                return [GlobalErrCode::VALIDATE_APPID_ERROR, 'Validate AppId Error:' . $e->getMessage()];
+            }
 
-        if ($fromAppId != 'sysOrgAssistant' && $fromAppId != $appId) {
-            return [GlobalErrCode::VALIDATE_APPID_ERROR, 'Validate AppId Error:' . $e->getMessage()];
+            return [GlobalErrCode::ILLEGAL_BUFFER, 'Illegal Buffer'];
         }
 
         return [0, $jsonContent];

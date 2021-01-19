@@ -63,17 +63,23 @@ class Response implements \ArrayAccess
      */
     public function headers()
     {
-        return $this->response->getHeaders();
+        $headers = [];
+
+        foreach ($this->response->getHeaders as $name => $values) {
+            $headers[$name] = implode(', ', $values);
+        }
+
+        return $headers;
     }
 
     /**
-     * Header.
-     * @param mixed $name
-     * @return null|string
+     * Get a header from the response.
+     *
+     * @return string
      */
-    public function header($name)
+    public function header(string $header)
     {
-        return $this->response->getHeader($name);
+        return $this->response->getHeaderLine($header);
     }
 
     /**
@@ -250,5 +256,15 @@ class Response implements \ArrayAccess
     public function offsetUnset($offset)
     {
         throw new LogicException('Response data may not be mutated using array access.');
+    }
+
+    /**
+     * Get the underlying PSR response for the response.
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function toPsrResponse()
+    {
+        return $this->response;
     }
 }

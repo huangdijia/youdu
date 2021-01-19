@@ -39,6 +39,14 @@ class Media
      */
     protected $packer;
 
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+        $this->client = $config->getClient();
+        $this->packer = $config->getPacker();
+        $this->urlFormatter = $config->getUrlFormatter();
+    }
+
     /**
      * 上传文件.
      *

@@ -44,6 +44,9 @@ class Session
     public function __construct(Config $config)
     {
         $this->config = $config;
+        $this->client = $config->getClient();
+        $this->packer = $config->getPacker();
+        $this->urlFormatter = $config->getUrlFormatter();
     }
 
     /**

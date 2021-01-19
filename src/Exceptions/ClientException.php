@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of youdu-client.
+ * This file is part of huangdijia/youdu-client.
  *
  * @link     https://github.com/huangdijia/youdu-client
  * @document https://github.com/huangdijia/youdu-client

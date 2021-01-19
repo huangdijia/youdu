@@ -9,6 +9,6 @@
  */
 namespace Huangdijia\Youdu;
 
-class User extends App
+class User
 {
 }

@@ -11,18 +11,13 @@ namespace Huangdijia\Youdu;
 
 class App
 {
-    protected $client;
+    /**
+     * @var Config
+     */
+    protected $config;
 
-    public function __construct(string $api = '', int $buin, string $appId = '', string $aesKey = '')
+    public function __construct(Config $config)
     {
-        $this->api = $api;
-        $this->buin = $buin;
-        $this->appId = $appId;
-        $this->aesKey = $aesKey;
-    }
-
-    public function getToken(): array
-    {
-        return [];
+        $this->config = $config;
     }
 }

@@ -1,9 +1,16 @@
 <?php
-
+/**
+ * This file is part of youdu-client.
+ *
+ * @link     https://github.com/huangdijia/youdu-client
+ * @document https://github.com/huangdijia/youdu-client
+ * @contact  huangdijia@gmail.com
+ * @link     https://youdu.im/api/api.html#40011
+ */
 namespace Huangdijia\Youdu\Encipher;
 
 /**
- * PKCS7Encoder class
+ * PKCS7Encoder class.
  *
  * 提供基于PKCS7算法的加解密接口.
  */
@@ -12,7 +19,7 @@ class PKCS7Encoder
     public static $blockSize = 32;
 
     /**
-     * 对需要加密的明文进行填充补位
+     * 对需要加密的明文进行填充补位.
      * @param $text 需要进行填充补位操作的明文
      * @return string 补齐明文字符串
      */
@@ -29,9 +36,9 @@ class PKCS7Encoder
 
         //获得补位所用的字符
         $padChr = chr($amountToPad);
-        $tmp    = "";
+        $tmp = '';
 
-        for ($index = 0; $index < $amountToPad; $index++) {
+        for ($index = 0; $index < $amountToPad; ++$index) {
             $tmp .= $padChr;
         }
 
@@ -39,8 +46,9 @@ class PKCS7Encoder
     }
 
     /**
-     * 对解密后的明文进行补位删除
+     * 对解密后的明文进行补位删除.
      * @param decrypted 解密后的明文
+     * @param mixed $text
      * @return string 删除填充补位后的明文
      */
     public function decode($text)
@@ -53,5 +61,4 @@ class PKCS7Encoder
 
         return substr($text, 0, (strlen($text) - $pad));
     }
-
 }

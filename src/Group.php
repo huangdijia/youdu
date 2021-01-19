@@ -9,6 +9,6 @@
  */
 namespace Huangdijia\Youdu;
 
-class Group extends App
+class Group
 {
 }

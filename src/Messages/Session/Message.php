@@ -12,9 +12,10 @@ namespace Huangdijia\Youdu\Messages\Session;
 use Huangdijia\Youdu\Contracts\Arrayable;
 use Huangdijia\Youdu\Contracts\Jsonable;
 use Huangdijia\Youdu\Contracts\Messages\SessionMessage;
+use Huangdijia\Youdu\Contracts\Whenable;
 use JsonSerializable;
 
-abstract class Message implements SessionMessage, Arrayable, Jsonable, JsonSerializable
+abstract class Message implements SessionMessage, Arrayable, Jsonable, JsonSerializable, Whenable
 {
     protected $sender;
 
@@ -55,5 +56,18 @@ abstract class Message implements SessionMessage, Arrayable, Jsonable, JsonSeria
         }
 
         return $data;
+    }
+
+    public function when($value, $callback, $default = null)
+    {
+        if ($value) {
+            return $callback($this, $value) ?: $this;
+        }
+
+        if ($default) {
+            return $default($this, $value) ?: $this;
+        }
+
+        return $this;
     }
 }

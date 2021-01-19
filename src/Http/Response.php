@@ -48,6 +48,15 @@ class Response implements \ArrayAccess
     }
 
     /**
+     * Make new instance.
+     * @return Response
+     */
+    public static function make(ResponseInterface $response)
+    {
+        return new self($response);
+    }
+
+    /**
      * Status.
      * @return int
      */
@@ -163,9 +172,13 @@ class Response implements \ArrayAccess
     public function throw()
     {
         if ($this->failed()) {
-            throw_if($this->clientError(), new ClientException($this->body()));
+            if ($this->clientError()) {
+                throw new ClientException($this->body());
+            }
 
-            throw_if($this->serverError(), new ServerException($this->body()));
+            if ($this->serverError()) {
+                throw new ServerException($this->body());
+            }
 
             throw new \Exception($this->body());
         }

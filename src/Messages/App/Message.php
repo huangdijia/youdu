@@ -12,12 +12,19 @@ namespace Huangdijia\Youdu\Messages\App;
 use Huangdijia\Youdu\Contracts\Arrayable;
 use Huangdijia\Youdu\Contracts\Jsonable;
 use Huangdijia\Youdu\Contracts\Messages\AppMessage;
+use Huangdijia\Youdu\Contracts\Whenable;
 use JsonSerializable;
 
-abstract class Message implements AppMessage, Arrayable, Jsonable, JsonSerializable
+abstract class Message implements AppMessage, Arrayable, Jsonable, JsonSerializable, Whenable
 {
+    /**
+     * @var string
+     */
     protected $toUser;
 
+    /**
+     * @var string
+     */
     protected $toDept;
 
     /**
@@ -67,5 +74,18 @@ abstract class Message implements AppMessage, Arrayable, Jsonable, JsonSerializa
         }
 
         return $data;
+    }
+
+    public function when($value, $callback, $default = null)
+    {
+        if ($value) {
+            return $callback($this, $value) ?: $this;
+        }
+
+        if ($default) {
+            return $default($this, $value) ?: $this;
+        }
+
+        return $this;
     }
 }

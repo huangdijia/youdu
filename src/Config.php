@@ -118,7 +118,7 @@ class Config
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getBuid()
     {

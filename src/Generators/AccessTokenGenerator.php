@@ -12,6 +12,7 @@ namespace Huangdijia\Youdu\Generators;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Huangdijia\Youdu\Config;
+use Huangdijia\Youdu\Http\Response;
 use Huangdijia\Youdu\Packer\MessagePacker;
 use RuntimeException;
 
@@ -32,11 +33,11 @@ class AccessTokenGenerator
      */
     protected $packer;
 
-    public function __construct(Config $config, Client $client, MessagePacker $packer)
+    public function __construct(Config $config)
     {
         $this->config = $config;
-        $this->client = $client;
-        $this->packer = $packer;
+        $this->client = $config->getClient();
+        $this->packer = $config->getPacker();
     }
 
     /**
@@ -48,20 +49,19 @@ class AccessTokenGenerator
     {
         $encrypted = $this->packer->pack((string) time());
         $parameters = [
-            'buin' => $this->config->get('buin'),
-            'appId' => $this->config->get('app_id'),
+            'buin' => $this->config->getBuid(),
+            'appId' => $this->config->getAppId(),
             'encrypt' => $encrypted,
         ];
 
         $url = '/cgi/gettoken';
-        $response = $this->client->post($url, ['form_params' => $parameters]);
-        $body = json_decode($response->getBody()->getContents(), true);
+        $response = new Response($this->client->post($url, ['form_params' => $parameters]));
 
-        if ($body['errcode'] != 0) {
-            throw new RuntimeException($body['errmsg'], $body['errcode']);
+        if ($response['errcode'] != 0) {
+            throw new RuntimeException($response['errmsg'], $response['errcode']);
         }
 
-        $decrypted = $this->packer->unpack($body['encrypt']);
+        $decrypted = $this->packer->unpack($response['encrypt']);
         $decoded = json_decode($decrypted, true);
 
         return $decoded['accessToken'];

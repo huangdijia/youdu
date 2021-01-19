@@ -25,7 +25,11 @@ class MessagePacker
         $this->crypter = $crypter;
     }
 
-    public function pack($message)
+    /**
+     * @throws RuntimeException
+     * @return mixed
+     */
+    public function pack(string $message)
     {
         [$errcode, $encrypted] = $this->crypter->encrypt($message, $this->appId);
 
@@ -36,7 +40,11 @@ class MessagePacker
         return $encrypted;
     }
 
-    public function unpack($message)
+    /**
+     * @throws RuntimeException
+     * @return string
+     */
+    public function unpack(string $message)
     {
         if (strlen($this->aesKey) != 44) {
             throw new RuntimeException('Illegal aesKey', ErrCode::$IllegalAesKey);

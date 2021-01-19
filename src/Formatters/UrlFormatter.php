@@ -10,6 +10,7 @@
 namespace Huangdijia\Youdu\Formatters;
 
 use GuzzleHttp\Exception\GuzzleException;
+use Huangdijia\Youdu\Config;
 use Huangdijia\Youdu\Generators\AccessTokenGenerator;
 use RuntimeException;
 
@@ -20,9 +21,9 @@ class UrlFormatter
      */
     protected $accessTokenGenerator;
 
-    public function __construct(AccessTokenGenerator $generator)
+    public function __construct(Config $config)
     {
-        $this->accessTokenGenerator = $generator;
+        $this->accessTokenGenerator = $config->getAccessTokenGenerator();
     }
 
     /**

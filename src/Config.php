@@ -9,12 +9,43 @@
  */
 namespace Huangdijia\Youdu;
 
+use GuzzleHttp\Client;
+use Huangdijia\Youdu\Encipher\Prpcrypt;
+use Huangdijia\Youdu\Formatters\UrlFormatter;
+use Huangdijia\Youdu\Generators\AccessTokenGenerator;
+use Huangdijia\Youdu\Packer\MessagePacker;
+
 class Config
 {
+    /**
+     * @var AccessTokenGenerator
+     */
+    private $accessTokenGenerator;
+
     /**
      * @var array
      */
     private $config;
+
+    /**
+     * @var Client
+     */
+    private $client;
+
+    /**
+     * @var MessagePacker
+     */
+    private $packer;
+
+    /**
+     * @var Prpcrypt
+     */
+    private $crypter;
+
+    /**
+     * @var UrlFormatter
+     */
+    private $urlFormatter;
 
     public function __construct(array $config)
     {
@@ -32,5 +63,100 @@ class Config
         }
 
         return $this->config[$key] ?? $default;
+    }
+
+    /**
+     * @return AccessTokenGenerator
+     */
+    public function getAccessTokenGenerator()
+    {
+        if (is_null($this->accessTokenGenerator)) {
+            $this->accessTokenGenerator = new AccessTokenGenerator($this);
+        }
+
+        return $this->accessTokenGenerator;
+    }
+
+    /**
+     * @return Prpcrypt
+     */
+    public function getCrypter()
+    {
+        if (is_null($this->crypter)) {
+            $this->crypter = new Prpcrypt($this->getAesKey());
+        }
+
+        return $this->crypter;
+    }
+
+    /**
+     * @return MessagePacker
+     */
+    public function getPacker()
+    {
+        if (is_null($this->packer)) {
+            $this->packer = new MessagePacker($this->getCrypter());
+        }
+
+        return $this->packer;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApi()
+    {
+        return $this->get('api');
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppId()
+    {
+        return $this->get('app_id');
+    }
+
+    /**
+     * @return string
+     */
+    public function getBuid()
+    {
+        return $this->get('buid');
+    }
+
+    /**
+     * @return string
+     */
+    public function getAesKey()
+    {
+        return $this->get('aes_key');
+    }
+
+    /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        if (is_null($this->client)) {
+            $this->client = new Client([
+                'base_uri' => $this->getApi(),
+                'timeout' => 5.0,
+            ]);
+        }
+
+        return $this->client;
+    }
+
+    /**
+     * @return UrlFormatter
+     */
+    public function getUrlFormatter()
+    {
+        if (is_null($this->urlFormatter)) {
+            $this->urlFormatter = new UrlFormatter($this);
+        }
+
+        return $this->urlFormatter;
     }
 }

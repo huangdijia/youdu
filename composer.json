@@ -3,7 +3,8 @@
     "description": "Youdu client for php",
     "type": "library",
     "require": {
-        "guzzlehttp/guzzle": "^6.0|^7.0"
+        "guzzlehttp/guzzle": "^6.0|^7.0",
+        "huangdijia/constants": "^0.1.2"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.14",

@@ -48,6 +48,35 @@ class Response implements \ArrayAccess
     }
 
     /**
+     * Body.
+     * @throws RuntimeException
+     * @return string
+     */
+    public function body()
+    {
+        return $this->response->getBody()->getContents();
+    }
+
+    /**
+     * Headers.
+     * @return array
+     */
+    public function headers()
+    {
+        return $this->response->getHeaders();
+    }
+
+    /**
+     * Header.
+     * @param mixed $name
+     * @return null|string
+     */
+    public function header($name)
+    {
+        return $this->response->getHeader($name);
+    }
+
+    /**
      * Make new instance.
      * @return Response
      */
@@ -63,16 +92,6 @@ class Response implements \ArrayAccess
     public function status()
     {
         return $this->response->getStatusCode();
-    }
-
-    /**
-     * Body.
-     * @throws RuntimeException
-     * @return string
-     */
-    public function body()
-    {
-        return $this->response->getBody()->getContents();
     }
 
     /**

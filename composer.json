@@ -19,6 +19,11 @@
             "./src/helpers.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Huangdijia\\Youdu\\Tests": "tests/"
+        }
+    },
     "license": "MIT",
     "authors": [{
         "name": "huangdijia",

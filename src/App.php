@@ -10,9 +10,11 @@
 namespace Huangdijia\Youdu;
 
 use GuzzleHttp\Client;
-use Huangdijia\Youdu\Exceptions\ErrCode;
+use GuzzleHttp\Exception\GuzzleException;
+use Huangdijia\Youdu\Constants\BaseErrCode;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
 use Huangdijia\Youdu\Http\Response;
+use Huangdijia\Youdu\Messages\App\Message;
 use Huangdijia\Youdu\Packer\MessagePacker;
 use RuntimeException;
 
@@ -46,12 +48,17 @@ class App
         $this->urlFormatter = $config->getUrlFormatter();
     }
 
-    public function send($message)
+    /**
+     * @throws RuntimeException
+     * @throws GuzzleException
+     * @return true
+     */
+    public function send(Message $message)
     {
         $encrypted = $this->packer->pack($message->toJson());
         $parameters = [
-            'buin' => $this->buin,
-            'appId' => $this->appId,
+            'buin' => $this->config->getBuid(),
+            'appId' => $this->config->getAppId(),
             'encrypt' => $encrypted,
         ];
 
@@ -59,13 +66,11 @@ class App
         $response = new Response($this->client->post($url, ['form_params' => $parameters]));
 
         if ($response->status() != 200) {
-            throw new RuntimeException('http request code ' . $response['httpCode'], ErrCode::$IllegalHttpReq);
+            throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::ERRCODE_INVALID_REQUEST);
         }
 
-        $body = json_decode($response['body'], true);
-
-        if ($body['errcode'] !== 0) {
-            throw new RuntimeException($body['errmsg'], $body['errcode']);
+        if ($response['errcode'] !== 0) {
+            throw new RuntimeException($response['errmsg'], $response['errcode']);
         }
 
         return true;

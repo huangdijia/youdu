@@ -11,10 +11,11 @@ namespace Huangdijia\Youdu\Http;
 
 use Huangdijia\Youdu\Exceptions\ClientException;
 use Huangdijia\Youdu\Exceptions\ServerException;
+use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-class Response
+class Response implements \ArrayAccess
 {
     /**
      * @var ResponseInterface
@@ -170,5 +171,52 @@ class Response
         }
 
         return $this;
+    }
+
+    /**
+     * Determine if the given offset exists.
+     *
+     * @param string $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->json()[$offset]);
+    }
+
+    /**
+     * Get the value for a given offset.
+     *
+     * @param string $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->json()[$offset];
+    }
+
+    /**
+     * Set the value at the given offset.
+     *
+     * @param string $offset
+     * @param mixed $value
+     *
+     * @throws \LogicException
+     */
+    public function offsetSet($offset, $value)
+    {
+        throw new LogicException('Response data may not be mutated using array access.');
+    }
+
+    /**
+     * Unset the value at the given offset.
+     *
+     * @param string $offset
+     *
+     * @throws \LogicException
+     */
+    public function offsetUnset($offset)
+    {
+        throw new LogicException('Response data may not be mutated using array access.');
     }
 }

@@ -49,7 +49,7 @@ class AccessTokenGenerator
     {
         $encrypted = $this->packer->pack((string) time());
         $parameters = [
-            'buin' => $this->config->getBuid(),
+            'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'encrypt' => $encrypted,
         ];

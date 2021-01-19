@@ -9,7 +9,7 @@
  */
 namespace Huangdijia\Youdu\Encipher;
 
-use Huangdijia\Youdu\Exceptions\ErrCode;
+use Huangdijia\Youdu\Constants\ErrCodes\GlobalErrCode;
 use Throwable;
 
 /**
@@ -47,9 +47,9 @@ class Prpcrypt
             $encrypted = openssl_encrypt($text, 'AES-256-CBC', $this->key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $iv);
 
             // 使用BASE64对加密后的字符串进行编码
-            return [ErrCode::ERRCODE_OK, base64_encode($encrypted)];
+            return [GlobalErrCode::OK, base64_encode($encrypted)];
         } catch (Throwable $e) {
-            return [ErrCode::$EncryptAESError, 'Encrypt AES Error:' . $e->getMessage()];
+            return [GlobalErrCode::ENCRYPT_AES_ERROR, 'Encrypt AES Error:' . $e->getMessage()];
         }
     }
 
@@ -69,7 +69,7 @@ class Prpcrypt
             $iv = substr($this->key, 0, 16);
             $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $this->key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $iv);
         } catch (Throwable $e) {
-            return [ErrCode::$DecryptAESError, 'Decrypt AES Error:' . $e->getMessage()];
+            return [GlobalErrCode::DECRYPT_AES_ERROR, 'Decrypt AES Error:' . $e->getMessage()];
         }
 
         try {
@@ -87,11 +87,11 @@ class Prpcrypt
             $jsonContent = substr($content, 4, $jsonLen);
             $fromAppId = substr($content, $jsonLen + 4);
         } catch (Throwable $e) {
-            return [ErrCode::$IllegalBuffer, 'Illegal Buffer'];
+            return [GlobalErrCode::ILLEGAL_BUFFER, 'Illegal Buffer'];
         }
 
         if ($fromAppId != 'sysOrgAssistant' && $fromAppId != $appId) {
-            return [ErrCode::$ValidateAppIdError, 'Validate AppId Error:' . $e->getMessage()];
+            return [GlobalErrCode::VALIDATE_APPID_ERROR, 'Validate AppId Error:' . $e->getMessage()];
         }
 
         return [0, $jsonContent];

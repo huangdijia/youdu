@@ -62,7 +62,7 @@ class App
     {
         $encrypted = $this->packer->pack($message->toJson());
         $parameters = [
-            'buin' => $this->config->getBuid(),
+            'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'encrypt' => $encrypted,
         ];

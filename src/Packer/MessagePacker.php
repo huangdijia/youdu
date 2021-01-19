@@ -9,8 +9,8 @@
  */
 namespace Huangdijia\Youdu\Packer;
 
+use Huangdijia\Youdu\Constants\ErrCodes\GlobalErrCode;
 use Huangdijia\Youdu\Encipher\Prpcrypt;
-use Huangdijia\Youdu\Exceptions\ErrCode;
 use RuntimeException;
 
 class MessagePacker
@@ -33,7 +33,7 @@ class MessagePacker
     {
         [$errcode, $encrypted] = $this->crypter->encrypt($message, $this->appId);
 
-        if ($errcode != 0) {
+        if ($errcode != GlobalErrCode::OK) {
             throw new RuntimeException($encrypted, $errcode);
         }
 
@@ -47,12 +47,12 @@ class MessagePacker
     public function unpack(string $message)
     {
         if (strlen($this->aesKey) != 44) {
-            throw new RuntimeException('Illegal aesKey', ErrCode::$IllegalAesKey);
+            throw new RuntimeException('Illegal aesKey', GlobalErrCode::ILLEGAL_AES_KEY);
         }
 
         [$errcode, $decrypted] = $this->crypter->decrypt($message, $this->appId);
 
-        if ($errcode != 0) {
+        if ($errcode != GlobalErrCode::OK) {
             throw new RuntimeException('Decrypt faild:' . $decrypted, $errcode);
         }
 

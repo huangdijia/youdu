@@ -120,9 +120,9 @@ class Config
     /**
      * @return int
      */
-    public function getBuid()
+    public function getBuin()
     {
-        return $this->get('buid');
+        return $this->get('buin');
     }
 
     /**

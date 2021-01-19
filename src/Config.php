@@ -50,7 +50,12 @@ class Config
 
     public function __construct(array $config)
     {
-        $this->config = $config;
+        $this->config = array_merge([
+            'api' => '',
+            'buin' => 0,
+            'app_id' => '',
+            'aes_key' => '',
+        ], $config);
     }
 
     /**

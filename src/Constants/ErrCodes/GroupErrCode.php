@@ -14,6 +14,11 @@ use Huangdijia\Constants\AbstractConstants;
 class GroupErrCode extends AbstractConstants
 {
     /**
+     * @Message("OK")
+     */
+    const OK = 0;
+
+    /**
      * @Message("群名称为空")
      */
     const ERRCODE_MISS_GROUPNAME = 500001;

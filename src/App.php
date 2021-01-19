@@ -71,10 +71,10 @@ class App
         $response = Response::make($this->client->post($url, ['form_params' => $parameters]));
 
         if (! $response->ok()) {
-            throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::ERRCODE_INVALID_REQUEST);
+            throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::INVALID_REQUEST);
         }
 
-        if ($response['errcode'] !== 0) {
+        if ($response['errcode'] !== BaseErrCode::OK) {
             throw new RuntimeException($response['errmsg'], $response['errcode']);
         }
 
@@ -162,10 +162,10 @@ class App
         $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/set.ent.notice'), ['form_params' => $parameters]));
 
         if (! $response->ok()) {
-            throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::ERRCODE_INVALID_REQUEST);
+            throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::INVALID_REQUEST);
         }
 
-        if ($response['errcode'] !== 0) {
+        if ($response['errcode'] !== BaseErrCode::OK) {
             throw new RuntimeException($response['errmsg'], $response['errcode']);
         }
 
@@ -196,10 +196,10 @@ class App
         $response = Response::make($this->client->post($this->urlFormatter->format('/cgi/popwindow'), ['form_params' => $parameters]));
 
         if (! $response->ok()) {
-            throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::ERRCODE_INVALID_REQUEST);
+            throw new RuntimeException('http request code ' . $response->status(), BaseErrCode::INVALID_REQUEST);
         }
 
-        if ($response['errcode'] !== 0) {
+        if ($response['errcode'] !== BaseErrCode::OK) {
             throw new RuntimeException($response['errmsg'], $response['errcode']);
         }
 

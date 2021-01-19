@@ -14,6 +14,11 @@ use Huangdijia\Constants\AbstractConstants;
 class DeptErrCode extends AbstractConstants
 {
     /**
+     * @Message("OK")
+     */
+    const OK = 0;
+
+    /**
      * @Message("UserId不存在")
      */
     const ERRCODE_ACCOUNT_NOTEXIST = 300001;

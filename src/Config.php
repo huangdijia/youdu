@@ -96,7 +96,7 @@ class Config
     public function getPacker()
     {
         if (is_null($this->packer)) {
-            $this->packer = new MessagePacker($this->getCrypter());
+            $this->packer = new MessagePacker($this);
         }
 
         return $this->packer;

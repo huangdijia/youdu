@@ -10,7 +10,6 @@
 namespace Huangdijia\Youdu\Http;
 
 use Closure;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\UriInterface;
 
@@ -21,13 +20,19 @@ class PendingRequest
      */
     private $clientClosure;
 
-    public function __construct(Closure $clientClosure)
+    /**
+     * @var int
+     */
+    private $tries;
+
+    public function __construct(Closure $clientClosure, int $tries = 1)
     {
         $this->clientClosure = $clientClosure;
+        $this->tries = $tries;
     }
 
     /**
-     * @return Client
+     * @return \GuzzleHttp\Client
      */
     public function buildClient()
     {
@@ -41,7 +46,9 @@ class PendingRequest
      */
     public function send(string $method = 'get', $url = '', array $options = [])
     {
-        return new Response($this->buildClient()->request($method, $url, $options));
+        return retry($this->tries ?? 1, function () use ($method, $url, $options) {
+            return new Response($this->buildClient()->request($method, $url, $options));
+        }, 100);
     }
 
     /**
@@ -52,12 +59,18 @@ class PendingRequest
      */
     public function get($url, $query = null)
     {
+        if (strpos($url, '?') !== false) {
+            [$url, $queryStr] = explode('?', $url, 2);
+            parse_str($queryStr ?? '', $newQuery);
+            $query = array_merge($query, $newQuery);
+        }
+
         return $this->send('GET', $url, ['query' => $query]);
     }
 
     /**
      * @param string|UriInterface $url
-     * @param string $bodyFormat form_params/multipart/json
+     * @param string $bodyFormat form_params/multipart/json/body
      * @throws GuzzleException
      * @return Response
      */

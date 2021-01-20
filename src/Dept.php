@@ -9,7 +9,7 @@
  */
 namespace Huangdijia\Youdu;
 
-use Huangdijia\Youdu\Constants\BaseErrCode;
+use Huangdijia\Youdu\Constants\ErrCodes\BaseErrCode;
 use Huangdijia\Youdu\Constants\ErrCodes\DeptErrCode;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
 use Huangdijia\Youdu\Http\PendingRequest;

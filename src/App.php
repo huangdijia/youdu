@@ -10,7 +10,7 @@
 namespace Huangdijia\Youdu;
 
 use GuzzleHttp\Exception\GuzzleException;
-use Huangdijia\Youdu\Constants\BaseErrCode;
+use Huangdijia\Youdu\Constants\ErrCodes\BaseErrCode;
 use Huangdijia\Youdu\Formatters\UrlFormatter;
 use Huangdijia\Youdu\Http\PendingRequest;
 use Huangdijia\Youdu\Messages\App\Message;

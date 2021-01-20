@@ -21,7 +21,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Huangdijia\\Youdu\\Tests": "tests/"
+            "Huangdijia\\Youdu\\Tests\\": "tests/"
         }
     },
     "license": "MIT",

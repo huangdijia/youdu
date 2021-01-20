@@ -23,7 +23,7 @@ class PendingRequest
 
     public function __construct(Closure $clientClosure)
     {
-        $this->clientClosure = value($clientClosure);
+        $this->clientClosure = $clientClosure;
     }
 
     /**
@@ -31,7 +31,7 @@ class PendingRequest
      */
     public function buildClient()
     {
-        return call_user_func($this->clientClosure);
+        return call_user_func_array($this->clientClosure, []);
     }
 
     /**
@@ -57,11 +57,11 @@ class PendingRequest
 
     /**
      * @param string|UriInterface $url
-     * @param string $bodyFormat form_params/multipart
+     * @param string $bodyFormat form_params/multipart/json
      * @throws GuzzleException
      * @return Response
      */
-    public function post($url, array $data = [], string $bodyFormat = 'form_params')
+    public function post($url, array $data = [], string $bodyFormat = 'json')
     {
         return $this->send('POST', $url, [$bodyFormat => $data]);
     }

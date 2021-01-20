@@ -128,7 +128,7 @@ class Config
      */
     public function getBuin()
     {
-        return $this->get('buin');
+        return (int) $this->get('buin');
     }
 
     /**

@@ -1,6 +1,10 @@
 {
     "name": "huangdijia/youdu-client",
     "description": "Youdu client for php",
+    "authors": [{
+        "name": "huangdijia",
+        "email": "huangdijia@gmail.com"
+    }],
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "^6.0|^7.0",
@@ -25,10 +29,6 @@
         }
     },
     "license": "MIT",
-    "authors": [{
-        "name": "huangdijia",
-        "email": "huangdijia@gmail.com"
-    }],
     "scripts": {
         "test": "phpunit -c phpunit.xml --colors=always",
         "cs-fix": "php-cs-fixer fix $1",

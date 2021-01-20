@@ -22,17 +22,28 @@ class GroupTest extends TestCase
      */
     protected $group;
 
+    /**
+     * @var string
+     */
+    protected $testUserId;
+
+    /**
+     * @var string
+     */
+    protected $testGroupId;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->group = new Group($this->config);
+        $this->testGroupId = getenv('YOUDU_GROUP_ID');
+        $this->testUserId = getenv('YOUDU_USER_ID');
     }
 
     public function testLists()
     {
-        $uid = 10400;
-        $groups = $this->group->lists($uid);
+        $groups = $this->group->lists($this->testUserId);
         // var_dump($groups);
         $this->assertIsArray($groups);
         $this->assertGreaterThan(1, count($groups));
@@ -40,9 +51,6 @@ class GroupTest extends TestCase
 
     public function testIsMember()
     {
-        $groupId = '74255127-{48D3A385-66DF-4D8B-BC23-3F75C220EF2E}';
-        $uid = 10400;
-
-        $this->assertTrue($this->group->isMember($groupId, $uid));
+        $this->assertTrue($this->group->isMember($this->testGroupId, $this->testUserId));
     }
 }

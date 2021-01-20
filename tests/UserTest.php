@@ -22,11 +22,17 @@ class UserTest extends TestCase
      */
     protected $user;
 
+    /**
+     * @var string
+     */
+    protected $testUserId;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = new User($this->config);
+        $this->testUserId = getenv('YOUDU_USER_ID');
     }
 
     public function testSimpleList()
@@ -38,8 +44,9 @@ class UserTest extends TestCase
 
     public function testUserInfo()
     {
-        $id = 10400;
-        $user = $this->user->get($id);
-        $this->assertSame($id, (int) $user['userId']);
+        $user = $this->user->get($this->testUserId);
+
+        $this->assertArrayHasKey('userId', $user);
+        $this->assertSame($this->testUserId, $user['userId']);
     }
 }
